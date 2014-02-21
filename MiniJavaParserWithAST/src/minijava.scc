@@ -1,0 +1,232 @@
+Package com.bju.cps450;
+
+Helpers
+
+  tab               = 9;
+  line_feed         = 10;
+  carriage_return   = 13;
+  space             = 32;
+  
+  line_terminator   = line_feed | carriage_return | carriage_return line_feed;
+  white_space       = tab | space;
+  
+  digit             = ['0'..'9'];
+  letter            = ['a'..'z'] | ['A'..'Z'];
+  printables        = [[0..127] - [line_feed + carriage_return]];
+  
+  escape            = '\"';
+  
+Tokens
+
+  string_literal    = '"' ([printables - ['"' + '\']] | escape)* '"';
+  unterminated_str  = '"' ([printables - ['"' + '\']])*;
+  illegal_str       = '"' ([printables - '"'])* '"';
+  
+  
+  integer_literal   = digit+ ('.' digit+)?;
+
+  classkey          = 'class';
+  public            = 'public';
+  void              = 'void';
+  string_class      = 'String';
+  extends           = 'extends';
+  int               = 'int';
+  boolean           = 'boolean';
+  if                = 'if';
+  else              = 'else';
+  while             = 'while';
+  true              = 'true';
+  false             = 'false';
+  this              = 'this';
+  new               = 'new';
+  return            = 'return';
+  
+  left_curly        = '{';
+  right_curly       = '}';
+  left_paren        = '(';
+  right_paren       = ')';
+  left_bracket      = '[';
+  right_bracket     = ']';
+  semicolon         = ';';
+  equals            = '=';
+  less_than         = '<';
+  greater_than      = '>';
+  plus              = '+';
+  minus             = '-';
+  multiplication    = '*';
+  divides           = '/';
+  dot               = '.';
+  comma             = ',';
+  not               = '!';
+  or                = '||';
+  and               = '&&';
+  
+  comment           = '//' printables*;
+  whitespace        = white_space+;
+  end_of_line       = line_terminator+;
+  
+  identifier        = (letter | '_') (letter | digit | '_')*;
+  
+  unknown_character = [0..127];
+  
+Ignored Tokens
+  
+  comment, whitespace, end_of_line;
+  
+Productions
+
+  start {-> start } = [first]:class_definition [rest]:class_definition* {-> New start([first.class_definition, rest.class_definition]) };
+	
+  class_definition {-> class_definition } = T.classkey T.identifier extends_production? T.left_curly 
+					 
+					 	variable_definition*
+					 	
+					 	method_definition*
+							
+					 T.right_curly {-> New class_definition(identifier, extends_production.extends_class, [variable_definition.variable], [method_definition.method]) };
+					   
+  extends_production {-> extends_class } = T.left_paren T.extends T.identifier T.right_paren {-> New extends_class(identifier) };
+  
+  variable_definition {-> variable } = type_production T.identifier T.semicolon {-> New variable(type_production.type, identifier) };
+  
+  method_definition {-> method } = T.public type_production T.identifier T.left_paren argument_list? T.right_paren T.left_curly
+  						
+  						variable_definition*
+  
+  						statement+
+  
+                      T.right_curly {-> New method(type_production.type, identifier, [argument_list.argument], [variable_definition.variable], [statement.statement]) };
+                      
+  type_production {-> type } = {int_array} T.int T.left_bracket T.right_bracket {-> New type.int_array(int) }
+                  | {str_array} T.string_class T.left_bracket T.right_bracket {-> New type.string_array(string_class) }
+                  | {int}       T.int {-> New type.int(int) }
+                  | {boolean}   T.boolean {-> New type.boolean(boolean) }
+                  | {string}    T.string_class {-> New type.string(string_class) }
+                  | {void}      T.void {-> New type.void(void) }
+                  | {custom}    T.identifier {-> New type.custom(identifier) };
+                  
+  argument_list {-> argument* } = type_production T.identifier argument_list_tail* {-> [New argument(type_production.type, identifier), argument_list_tail.argument] };
+  
+  argument_list_tail {-> argument } = T.comma type_production T.identifier {-> New argument(type_production.type, identifier) };
+  
+  values_list {-> expression* } = expression values_list_tail* {-> [expression.expression, values_list_tail.expression] };
+  
+  values_list_tail {-> expression } = T.comma expression {-> expression.expression };
+  
+  statement {-> statement } = {if}         T.if T.left_paren expression T.right_paren [true]:statement_block T.else [false]:statement_block {-> New statement.if(expression.expression, [true.statement], [false.statement]) }
+            | {while}      T.while T.left_paren expression T.right_paren statement_block {-> New statement.while(expression.expression, [statement_block.statement]) }
+            | {return}     T.return expression T.semicolon {-> New statement.return(expression) }
+            | {assignment} T.identifier T.equals expression T.semicolon {-> New statement.assignment(identifier, expression) }
+            | {array_assi} T.identifier T.left_bracket [position]:expression T.right_bracket T.equals [value]:expression T.semicolon {-> New statement.array_assignment(identifier, position.expression, value.expression) }
+            | {method_cal} T.identifier object_call* T.left_paren values_list? T.right_paren T.semicolon {-> New statement.method_call([identifier, object_call.identifier], [values_list.expression]) };
+  
+  statement_block {-> statement* } = T.left_curly statement* T.right_curly {-> [statement.statement] };
+  
+  object_call {-> identifier } = T.dot T.identifier {-> identifier };
+  
+  expression {-> expression } = expression_lvl6 {-> expression_lvl6.expression };
+  
+  expression_lvl6 {-> expression } = {or}   expression_lvl6 T.or expression_lvl5 {-> New expression.or(expression_lvl6.expression, expression_lvl5.expression) }
+                  | {pass} expression_lvl5 {-> expression_lvl5.expression };
+                 
+  expression_lvl5 {-> expression } = {and}  expression_lvl5 T.and expression_lvl4 {-> New expression.and(expression_lvl5.expression, expression_lvl4.expression) }
+                  | {pass} expression_lvl4 {-> expression_lvl4.expression };
+                  
+  expression_lvl4 {-> expression } = {qt}   [first]:expression_lvl3 T.greater_than expression_lvl3 {-> New expression.greater_than(first.expression, expression_lvl3.expression) }
+                  | {lt}   [first]:expression_lvl3 T.less_than expression_lvl3 {-> New expression.less_than(first.expression, expression_lvl3.expression) }
+                  | {eq}   [first]:expression_lvl3 T.equals expression_lvl3 {-> New expression.equals(first.expression, expression_lvl3.expression) }
+                  | {pass} expression_lvl3 {-> expression_lvl3.expression };
+  
+  expression_lvl3 {-> expression } = {add}  expression_lvl3 T.plus expression_lvl2 {-> New expression.addition(expression_lvl3.expression, expression_lvl2.expression) }
+                  | {sub}  expression_lvl3 T.minus expression_lvl2 {-> New expression.subtraction(expression_lvl3.expression, expression_lvl2.expression) }
+                  | {pass} expression_lvl2 {-> expression_lvl2.expression };
+                  
+  expression_lvl2 {-> expression } = {mul}  expression_lvl2 T.multiplication expression_lvl1 {-> New expression.multiplication(expression_lvl2.expression, expression_lvl1.expression) }
+                  | {div}  expression_lvl2 T.divides expression_lvl1 {-> New expression.division(expression_lvl2.expression, expression_lvl1.expression) }
+                  | {pass} expression_lvl1 {-> expression_lvl1.expression };                
+                  
+  expression_lvl1 {-> expression } = {not}  T.not expression_lvl1 {-> expression_lvl1.expression }
+                  | {neg}  T.minus expression_lvl1 {-> expression_lvl1.expression }
+                  | {pass} expression_lvl0 {-> expression_lvl0.expression };  
+                  
+  expression_lvl0 {-> expression } = {array}      T.identifier T.left_bracket expression T.right_bracket {-> New expression.array(identifier, expression.expression) }
+                  | {method_cal} method_call_expr? T.identifier T.left_paren values_list? T.right_paren {-> New expression.method_call(method_call_expr.expression, identifier, [values_list.expression]) }
+                  | {int}        T.integer_literal {-> New expression.int(integer_literal) }
+                  | {string}     T.string_literal {-> New expression.string(string_literal) }
+                  | {true}       T.true {-> New expression.true(true) }
+                  | {false}      T.false {-> New expression.false(false) }
+                  | {identifier} T.identifier {-> New expression.identifier(identifier) }
+                  | {this}       T.this {-> New expression.this(this) }
+                  | {new_obj}    T.new T.identifier T.left_paren values_list? T.right_paren {-> New expression.new_object(identifier, [values_list.expression]) }
+                  | {new_int_arr}    T.new T.int T.left_bracket expression T.right_bracket {-> New expression.new_int_array(expression.expression) }
+                  | {new_str_arr}    T.new T.string_class T.left_bracket expression T.right_bracket {-> New expression.new_string_array(expression.expression) }
+                  | {paren}      T.left_paren expression T.right_paren {-> expression.expression };
+                  
+   method_call_expr {-> expression } = expression_lvl0 T.dot {-> expression_lvl0.expression };
+   
+ Abstract Syntax Tree
+   
+   start = class_definition*;
+   
+   class_definition = identifier extends_class? variable* method*;
+   
+   extends_class = identifier;
+   
+   variable = type identifier;
+   
+   method = type identifier argument* variable* statement*;
+   
+   type = {int_array} int 
+        | {string_array} string_class
+        | {int}       int
+        | {boolean}   boolean
+        | {string}    string_class
+        | {void}      void
+        | {custom}    identifier;
+        
+   argument = type identifier;
+   
+   statement = {if}        [condition]:expression [true]:statement* [false]:statement*
+            | {while}      [condition]:expression statement*
+            | {return}     expression
+            | {assignment} identifier expression
+            | {array_assignment} identifier [position]:expression [value]:expression 
+            | {method_call} identifier* expression*;
+   
+   expression = {or} [lhs]:expression [rhs]:expression
+              | {and} [lhs]:expression [rhs]:expression
+              | {greater_than} [lhs]:expression [rhs]:expression
+              | {less_than} [lhs]:expression [rhs]:expression
+              | {equals} [lhs]:expression [rhs]:expression
+              | {addition} [lhs]:expression [rhs]:expression
+              | {subtraction} [lhs]:expression [rhs]:expression
+              | {multiplication} [lhs]:expression [rhs]:expression
+              | {division} [lhs]:expression [rhs]:expression
+              | {not} expression
+              | {negation} expression
+              | {array} identifier expression
+              | {method_call} [dot]:expression? identifier expression*
+              | {int} integer_literal
+              | {string} string_literal
+              | {true} true
+              | {false} false
+              | {identifier} identifier
+              | {this} this
+              | {new_object} identifier expression*
+              | {new_int_array} expression
+              | {new_string_array} expression;
+   
+     
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  

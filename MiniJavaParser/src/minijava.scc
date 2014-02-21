@@ -1,0 +1,179 @@
+Package com.bju.cps450;
+
+Helpers
+
+  tab               = 9;
+  line_feed         = 10;
+  carriage_return   = 13;
+  space             = 32;
+  
+  line_terminator   = line_feed | carriage_return | carriage_return line_feed;
+  white_space       = tab | space;
+  
+  digit             = ['0'..'9'];
+  letter            = ['a'..'z'] | ['A'..'Z'];
+  printables        = [[0..127] - [line_feed + carriage_return]];
+  
+  escape            = '\"';
+  
+Tokens
+
+  string_literal    = '"' ([printables - ['"' + '\']] | escape)* '"';
+  unterminated_str  = '"' ([printables - ['"' + '\']])*;
+  illegal_str       = '"' ([printables - '"'])* '"';
+  
+  
+  integer_literal   = digit+ ('.' digit+)?;
+
+  classkey          = 'class';
+  public            = 'public';
+  void              = 'void';
+  string_class      = 'String';
+  extends           = 'extends';
+  int               = 'int';
+  boolean           = 'boolean';
+  if                = 'if';
+  else              = 'else';
+  while             = 'while';
+  true              = 'true';
+  false             = 'false';
+  this              = 'this';
+  new               = 'new';
+  return            = 'return';
+  
+  left_curly        = '{';
+  right_curly       = '}';
+  left_paren        = '(';
+  right_paren       = ')';
+  left_bracket      = '[';
+  right_bracket     = ']';
+  semicolon         = ';';
+  equals            = '=';
+  less_than         = '<';
+  greater_than      = '>';
+  plus              = '+';
+  minus             = '-';
+  multiplication    = '*';
+  divides           = '/';
+  dot               = '.';
+  comma             = ',';
+  not               = '!';
+  or                = '||';
+  and               = '&&';
+  
+  comment           = '//' printables*;
+  whitespace        = white_space+;
+  end_of_line       = line_terminator+;
+  
+  identifier        = (letter | '_') (letter | digit | '_')*;
+  
+  unknown_character = [0..127];
+  
+Ignored Tokens
+  
+  comment, whitespace, end_of_line;
+  
+Productions
+
+  start = [first]:class_definition [rest]:class_definition*;
+	
+  class_definition = T.classkey T.identifier extends_production? T.left_curly 
+					 
+					 	variable_definition*
+					 	
+					 	method_definition*
+							
+					 T.right_curly;
+					   
+  extends_production = T.left_paren T.extends T.identifier T.right_paren;
+  
+  variable_definition = type_production T.identifier T.semicolon;
+  
+  method_definition = T.public type_production T.identifier T.left_paren argument_list? T.right_paren T.left_curly
+  						
+  						variable_definition*
+  
+  						statement+
+  
+                      T.right_curly;
+                      
+  type_production = {int_array} T.int T.left_bracket T.right_bracket
+                  | {str_array} T.string_class T.left_bracket T.right_bracket
+                  | {int}       T.int
+                  | {boolean}   T.boolean
+                  | {string}    T.string_class
+                  | {void}      T.void
+                  | {custom}    T.identifier;
+                  
+  argument_list = type_production T.identifier argument_list_tail*;
+  
+  argument_list_tail = T.comma type_production T.identifier;
+  
+  values_list = expression values_list_tail*;
+  
+  values_list_tail = T.comma expression;
+  
+  statement = {if}         T.if T.left_paren expression T.right_paren [true]:statement_block T.else [false]:statement_block
+            | {while}      T.while T.left_paren expression T.right_paren statement_block
+            | {return}     T.return expression T.semicolon
+            | {assignment} T.identifier T.equals expression T.semicolon
+            | {array_assi} T.identifier T.left_bracket [position]:expression T.right_bracket T.equals [value]:expression T.semicolon 
+            | {method_cal} T.identifier object_call* T.left_paren values_list? T.right_paren T.semicolon;
+  
+  statement_block = T.left_curly statement* T.right_curly;
+  
+  object_call = T.dot T.identifier;
+  
+  expression = expression_lvl6;
+  
+  expression_lvl6 = {or}   expression_lvl6 T.or expression_lvl5
+                  | {pass} expression_lvl5;
+                 
+  expression_lvl5 = {and}  expression_lvl5 T.and expression_lvl4
+                  | {pass} expression_lvl4;
+                  
+  expression_lvl4 = {qt}   expression_lvl4 T.greater_than expression_lvl3
+                  | {lt}   expression_lvl4 T.less_than expression_lvl3
+                  | {eq}   expression_lvl4 T.equals expression_lvl3
+                  | {pass} expression_lvl3;
+  
+  expression_lvl3 = {add}  expression_lvl3 T.plus expression_lvl2
+                  | {sub}  expression_lvl3 T.minus expression_lvl2
+                  | {pass} expression_lvl2;
+                  
+  expression_lvl2 = {mul}  expression_lvl2 T.multiplication expression_lvl1
+                  | {div}  expression_lvl2 T.divides expression_lvl1
+                  | {pass} expression_lvl1;                
+                  
+  expression_lvl1 = {not}  T.not expression_lvl1
+                  | {neg}  T.minus expression_lvl1
+                  | {pass} expression_lvl0;  
+                  
+  expression_lvl0 = {array}      T.identifier T.left_bracket expression T.right_bracket
+                  | {method_cal} method_call_expr? T.identifier T.left_paren values_list? T.right_paren
+                  | {int}        T.integer_literal
+                  | {string}     T.string_literal
+                  | {true}       T.true
+                  | {false}      T.false
+                  | {identifier} T.identifier
+                  | {this}       T.this
+                  | {new_obj}    T.new T.identifier T.left_paren values_list? T.right_paren
+                  | {new_arr}    T.new T.int T.left_bracket expression T.right_bracket
+                  | {paren}      T.left_paren expression T.right_paren;
+                  
+   method_call_expr = expression_lvl0 T.dot;
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  
+                  

@@ -1,0 +1,75 @@
+Package com.bju.cps450;
+
+Helpers
+
+  tab               = 9;
+  line_feed         = 10;
+  carriage_return   = 13;
+  space             = 32;
+  
+  line_terminator   = line_feed | carriage_return | carriage_return line_feed;
+  white_space       = tab | space;
+  
+  digit             = ['0'..'9'];
+  letter            = ['a'..'z'] | ['A'..'Z'];
+  printables        = [[0..127] - [line_feed + carriage_return]];
+  
+  escape            = '\"';
+  
+Tokens
+
+  string_literal    = '"' ([printables - ['"' + '\']] | escape)* '"';
+  unterminated_str  = '"' ([printables - ['"' + '\']])*;
+  illegal_str       = '"' ([printables - '"'])* '"';
+  
+  
+  integer_literal   = ('-' digit+ ('.' digit+)? | digit+ ('.' digit+)?);
+
+  class             = 'class';
+  public            = 'public';
+  static            = 'static';
+  void              = 'void';
+  main              = 'main';
+  string_class      = 'String';
+  extends           = 'extends';
+  int               = 'int';
+  boolean           = 'boolean';
+  if                = 'if';
+  else              = 'else';
+  while             = 'while';
+  true              = 'true';
+  false             = 'false';
+  this              = 'this';
+  new               = 'new';
+  
+  left_curly        = '{';
+  right_curly       = '}';
+  left_paren        = '(';
+  right_paren       = ')';
+  left_bracket      = '[';
+  right_bracket     = ']';
+  semicolon         = ';';
+  equals            = '=';
+  less_than         = '<';
+  greater_than      = '>';
+  plus              = '+';
+  minus             = '-';
+  multiplication    = '*';
+  divides           = '/';
+  dot               = '.';
+  comma             = ',';
+  not               = '!';
+  or                = '||';
+  and               = '&&';
+  
+  comment           = '//' printables*;
+  whitespace        = white_space+;
+  end_of_line       = line_terminator+;
+  
+  identifier        = (letter | '_') (letter | digit | '_')*;
+  
+  unknown_character = [0..127];
+  
+Ignored Tokens
+  
+  comment, whitespace, end_of_line;
