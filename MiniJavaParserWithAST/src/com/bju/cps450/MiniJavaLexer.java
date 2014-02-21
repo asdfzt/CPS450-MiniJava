@@ -40,6 +40,7 @@ public class MiniJavaLexer extends Lexer {
 				System.out.println(this.token.getLine() + " illegal string: " + this.token.getText());
 			}
 		} else if(opt.shouldPrintTokens) {
+			//ignore comments and whitespace tokens
 			if(!(this.token instanceof TWhitespace || this.token instanceof TEndOfLine || this.token instanceof TComment)) {
 				System.out.println(this.token.getLine() + " " + this.token.getText());
 			}

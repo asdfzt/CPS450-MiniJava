@@ -2290,14 +2290,14 @@ public class Parser
         PExpressionLvl4 pexpressionlvl4Node1;
         {
             // Block
-        PExpressionLvl4 pexpressionlvl4Node2;
+        PExpressionLvl3 pexpressionlvl3Node2;
         TGreaterThan tgreaterthanNode3;
         PExpressionLvl3 pexpressionlvl3Node4;
-        pexpressionlvl4Node2 = (PExpressionLvl4)nodeArrayList1.get(0);
+        pexpressionlvl3Node2 = (PExpressionLvl3)nodeArrayList1.get(0);
         tgreaterthanNode3 = (TGreaterThan)nodeArrayList2.get(0);
         pexpressionlvl3Node4 = (PExpressionLvl3)nodeArrayList3.get(0);
 
-        pexpressionlvl4Node1 = new AQtExpressionLvl4(pexpressionlvl4Node2, tgreaterthanNode3, pexpressionlvl3Node4);
+        pexpressionlvl4Node1 = new AQtExpressionLvl4(pexpressionlvl3Node2, tgreaterthanNode3, pexpressionlvl3Node4);
         }
 	nodeList.add(pexpressionlvl4Node1);
         return nodeList;
@@ -2316,14 +2316,14 @@ public class Parser
         PExpressionLvl4 pexpressionlvl4Node1;
         {
             // Block
-        PExpressionLvl4 pexpressionlvl4Node2;
+        PExpressionLvl3 pexpressionlvl3Node2;
         TLessThan tlessthanNode3;
         PExpressionLvl3 pexpressionlvl3Node4;
-        pexpressionlvl4Node2 = (PExpressionLvl4)nodeArrayList1.get(0);
+        pexpressionlvl3Node2 = (PExpressionLvl3)nodeArrayList1.get(0);
         tlessthanNode3 = (TLessThan)nodeArrayList2.get(0);
         pexpressionlvl3Node4 = (PExpressionLvl3)nodeArrayList3.get(0);
 
-        pexpressionlvl4Node1 = new ALtExpressionLvl4(pexpressionlvl4Node2, tlessthanNode3, pexpressionlvl3Node4);
+        pexpressionlvl4Node1 = new ALtExpressionLvl4(pexpressionlvl3Node2, tlessthanNode3, pexpressionlvl3Node4);
         }
 	nodeList.add(pexpressionlvl4Node1);
         return nodeList;
@@ -2342,14 +2342,14 @@ public class Parser
         PExpressionLvl4 pexpressionlvl4Node1;
         {
             // Block
-        PExpressionLvl4 pexpressionlvl4Node2;
+        PExpressionLvl3 pexpressionlvl3Node2;
         TEquals tequalsNode3;
         PExpressionLvl3 pexpressionlvl3Node4;
-        pexpressionlvl4Node2 = (PExpressionLvl4)nodeArrayList1.get(0);
+        pexpressionlvl3Node2 = (PExpressionLvl3)nodeArrayList1.get(0);
         tequalsNode3 = (TEquals)nodeArrayList2.get(0);
         pexpressionlvl3Node4 = (PExpressionLvl3)nodeArrayList3.get(0);
 
-        pexpressionlvl4Node1 = new AEqExpressionLvl4(pexpressionlvl4Node2, tequalsNode3, pexpressionlvl3Node4);
+        pexpressionlvl4Node1 = new AEqExpressionLvl4(pexpressionlvl3Node2, tequalsNode3, pexpressionlvl3Node4);
         }
 	nodeList.add(pexpressionlvl4Node1);
         return nodeList;
@@ -3439,8 +3439,8 @@ public class Parser
 			{{-1, ERROR, 78}, {25, SHIFT, 110}, },
 			{{-1, REDUCE, 41}, {36, SHIFT, 111}, },
 			{{-1, REDUCE, 43}, {37, SHIFT, 112}, },
-			{{-1, REDUCE, 45}, {26, SHIFT, 113}, {27, SHIFT, 114}, {28, SHIFT, 115}, },
-			{{-1, REDUCE, 49}, {29, SHIFT, 116}, {30, SHIFT, 117}, },
+			{{-1, REDUCE, 45}, },
+			{{-1, REDUCE, 49}, {26, SHIFT, 113}, {27, SHIFT, 114}, {28, SHIFT, 115}, {29, SHIFT, 116}, {30, SHIFT, 117}, },
 			{{-1, REDUCE, 52}, {31, SHIFT, 118}, {32, SHIFT, 119}, },
 			{{-1, REDUCE, 55}, },
 			{{-1, REDUCE, 58}, {33, SHIFT, 120}, },
@@ -3501,7 +3501,7 @@ public class Parser
 			{{-1, ERROR, 140}, {22, SHIFT, 168}, },
 			{{-1, ERROR, 141}, {24, SHIFT, 169}, },
 			{{-1, REDUCE, 42}, {37, SHIFT, 112}, },
-			{{-1, REDUCE, 44}, {26, SHIFT, 113}, {27, SHIFT, 114}, {28, SHIFT, 115}, },
+			{{-1, REDUCE, 44}, },
 			{{-1, REDUCE, 48}, {29, SHIFT, 116}, {30, SHIFT, 117}, },
 			{{-1, REDUCE, 47}, {29, SHIFT, 116}, {30, SHIFT, 117}, },
 			{{-1, REDUCE, 46}, {29, SHIFT, 116}, {30, SHIFT, 117}, },
@@ -3609,20 +3609,20 @@ public class Parser
 			"expecting: '(', ')', '[', ']', ';', '=', '<', '>', '+', '-', '*', '/', '.', ',', '||', '&&'",
 			"expecting: ')', ']', ';', ',', '||'",
 			"expecting: ')', ']', ';', ',', '||', '&&'",
-			"expecting: ')', ']', ';', '=', '<', '>', ',', '||', '&&'",
 			"expecting: ')', ']', ';', '=', '<', '>', '+', '-', ',', '||', '&&'",
 			"expecting: ')', ']', ';', '=', '<', '>', '+', '-', '*', '/', ',', '||', '&&'",
 			"expecting: string literal, integer literal, 'true', 'false', 'this', 'new', '(', ')', '-', '!', identifier",
 			"expecting: '(', '.'",
 			"expecting: '(', '[', '=', '.'",
 			"expecting: '['",
+			"expecting: ')', ']', ';', '+', '-', ',', '||', '&&'",
 			"expecting: '='",
 			"expecting: 'else'",
 			"expecting: 'if', 'else', 'while', 'return', '}', identifier",
         };*/
     private static int[] errors;
 /*      {
-			0, 1, 2, 3, 4, 3, 3, 5, 6, 7, 3, 8, 1, 9, 9, 1, 3, 1, 10, 11, 1, 5, 11, 1, 5, 1, 12, 12, 13, 3, 10, 11, 3, 11, 14, 3, 5, 11, 15, 1, 1, 10, 3, 7, 3, 11, 3, 16, 3, 7, 1, 14, 17, 18, 7, 15, 15, 19, 20, 21, 17, 21, 8, 18, 18, 17, 19, 19, 22, 22, 22, 22, 22, 23, 19, 19, 19, 24, 13, 25, 26, 27, 28, 29, 29, 22, 1, 30, 19, 19, 1, 31, 31, 21, 11, 32, 21, 1, 18, 17, 21, 14, 14, 33, 15, 14, 29, 29, 30, 19, 21, 19, 19, 19, 19, 19, 19, 19, 19, 19, 1, 15, 13, 14, 18, 12, 13, 31, 30, 31, 11, 18, 21, 11, 7, 7, 19, 30, 22, 22, 14, 12, 26, 27, 28, 28, 28, 29, 29, 29, 29, 30, 21, 13, 19, 18, 18, 34, 21, 13, 14, 11, 21, 35, 21, 12, 22, 14, 22, 22, 22, 14, 21, 18, 18, 19, 21, 13, 36, 21, 7, 22, 22, 22, 13, 21, 36, 21, 21, 
+			0, 1, 2, 3, 4, 3, 3, 5, 6, 7, 3, 8, 1, 9, 9, 1, 3, 1, 10, 11, 1, 5, 11, 1, 5, 1, 12, 12, 13, 3, 10, 11, 3, 11, 14, 3, 5, 11, 15, 1, 1, 10, 3, 7, 3, 11, 3, 16, 3, 7, 1, 14, 17, 18, 7, 15, 15, 19, 20, 21, 17, 21, 8, 18, 18, 17, 19, 19, 22, 22, 22, 22, 22, 23, 19, 19, 19, 24, 13, 25, 26, 26, 27, 28, 28, 22, 1, 29, 19, 19, 1, 30, 30, 21, 11, 31, 21, 1, 18, 17, 21, 14, 14, 32, 15, 14, 28, 28, 29, 19, 21, 19, 19, 19, 19, 19, 19, 19, 19, 19, 1, 15, 13, 14, 18, 12, 13, 30, 29, 30, 11, 18, 21, 11, 7, 7, 19, 29, 22, 22, 14, 12, 26, 26, 33, 33, 33, 28, 28, 28, 28, 29, 21, 13, 19, 18, 18, 34, 21, 13, 14, 11, 21, 35, 21, 12, 22, 14, 22, 22, 22, 14, 21, 18, 18, 19, 21, 13, 36, 21, 7, 22, 22, 22, 13, 21, 36, 21, 21, 
         };*/
 
     static 

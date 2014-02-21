@@ -7,7 +7,7 @@ import com.bju.cps450.analysis.*;
 @SuppressWarnings("nls")
 public final class ALtExpressionLvl4 extends PExpressionLvl4
 {
-    private PExpressionLvl4 _expressionLvl4_;
+    private PExpressionLvl3 _first_;
     private TLessThan _lessThan_;
     private PExpressionLvl3 _expressionLvl3_;
 
@@ -17,12 +17,12 @@ public final class ALtExpressionLvl4 extends PExpressionLvl4
     }
 
     public ALtExpressionLvl4(
-        @SuppressWarnings("hiding") PExpressionLvl4 _expressionLvl4_,
+        @SuppressWarnings("hiding") PExpressionLvl3 _first_,
         @SuppressWarnings("hiding") TLessThan _lessThan_,
         @SuppressWarnings("hiding") PExpressionLvl3 _expressionLvl3_)
     {
         // Constructor
-        setExpressionLvl4(_expressionLvl4_);
+        setFirst(_first_);
 
         setLessThan(_lessThan_);
 
@@ -34,7 +34,7 @@ public final class ALtExpressionLvl4 extends PExpressionLvl4
     public Object clone()
     {
         return new ALtExpressionLvl4(
-            cloneNode(this._expressionLvl4_),
+            cloneNode(this._first_),
             cloneNode(this._lessThan_),
             cloneNode(this._expressionLvl3_));
     }
@@ -45,16 +45,16 @@ public final class ALtExpressionLvl4 extends PExpressionLvl4
         ((Analysis) sw).caseALtExpressionLvl4(this);
     }
 
-    public PExpressionLvl4 getExpressionLvl4()
+    public PExpressionLvl3 getFirst()
     {
-        return this._expressionLvl4_;
+        return this._first_;
     }
 
-    public void setExpressionLvl4(PExpressionLvl4 node)
+    public void setFirst(PExpressionLvl3 node)
     {
-        if(this._expressionLvl4_ != null)
+        if(this._first_ != null)
         {
-            this._expressionLvl4_.parent(null);
+            this._first_.parent(null);
         }
 
         if(node != null)
@@ -67,7 +67,7 @@ public final class ALtExpressionLvl4 extends PExpressionLvl4
             node.parent(this);
         }
 
-        this._expressionLvl4_ = node;
+        this._first_ = node;
     }
 
     public TLessThan getLessThan()
@@ -124,7 +124,7 @@ public final class ALtExpressionLvl4 extends PExpressionLvl4
     public String toString()
     {
         return ""
-            + toString(this._expressionLvl4_)
+            + toString(this._first_)
             + toString(this._lessThan_)
             + toString(this._expressionLvl3_);
     }
@@ -133,9 +133,9 @@ public final class ALtExpressionLvl4 extends PExpressionLvl4
     void removeChild(@SuppressWarnings("unused") Node child)
     {
         // Remove child
-        if(this._expressionLvl4_ == child)
+        if(this._first_ == child)
         {
-            this._expressionLvl4_ = null;
+            this._first_ = null;
             return;
         }
 
@@ -158,9 +158,9 @@ public final class ALtExpressionLvl4 extends PExpressionLvl4
     void replaceChild(@SuppressWarnings("unused") Node oldChild, @SuppressWarnings("unused") Node newChild)
     {
         // Replace child
-        if(this._expressionLvl4_ == oldChild)
+        if(this._first_ == oldChild)
         {
-            setExpressionLvl4((PExpressionLvl4) newChild);
+            setFirst((PExpressionLvl3) newChild);
             return;
         }
 

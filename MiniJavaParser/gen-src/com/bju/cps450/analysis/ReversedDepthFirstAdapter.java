@@ -959,9 +959,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getGreaterThan().apply(this);
         }
-        if(node.getExpressionLvl4() != null)
+        if(node.getFirst() != null)
         {
-            node.getExpressionLvl4().apply(this);
+            node.getFirst().apply(this);
         }
         outAQtExpressionLvl4(node);
     }
@@ -988,9 +988,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getLessThan().apply(this);
         }
-        if(node.getExpressionLvl4() != null)
+        if(node.getFirst() != null)
         {
-            node.getExpressionLvl4().apply(this);
+            node.getFirst().apply(this);
         }
         outALtExpressionLvl4(node);
     }
@@ -1017,9 +1017,9 @@ public class ReversedDepthFirstAdapter extends AnalysisAdapter
         {
             node.getEquals().apply(this);
         }
-        if(node.getExpressionLvl4() != null)
+        if(node.getFirst() != null)
         {
-            node.getExpressionLvl4().apply(this);
+            node.getFirst().apply(this);
         }
         outAEqExpressionLvl4(node);
     }

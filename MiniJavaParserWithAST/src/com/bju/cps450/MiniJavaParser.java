@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.bju.cps450.lexer.Lexer;
 import com.bju.cps450.lexer.LexerException;
+import com.bju.cps450.node.EOF;
 import com.bju.cps450.node.Start;
 import com.bju.cps450.parser.Parser;
 import com.bju.cps450.parser.ParserException;
@@ -18,15 +19,14 @@ public class MiniJavaParser extends Parser {
 	}
 
 	@Override
-	public Start parse() throws ParserException, LexerException, IOException {
+	public Start parse() throws LexerException, IOException {
 		try {
 			return super.parse();
 		} catch (ParserException e) {
+			System.out.println(e);
 			System.out.println(this.lexer.peek().getClass().toString() + " " + this.lexer.peek().getText());
-			throw e;
+			while(!(lexer.next() instanceof EOF)) { ; }
 		}
+		return null;
 	}
-	
-	
-
 }

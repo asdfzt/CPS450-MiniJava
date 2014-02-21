@@ -942,9 +942,9 @@ public class DepthFirstAdapter extends AnalysisAdapter
     public void caseAQtExpressionLvl4(AQtExpressionLvl4 node)
     {
         inAQtExpressionLvl4(node);
-        if(node.getExpressionLvl4() != null)
+        if(node.getFirst() != null)
         {
-            node.getExpressionLvl4().apply(this);
+            node.getFirst().apply(this);
         }
         if(node.getGreaterThan() != null)
         {
@@ -971,9 +971,9 @@ public class DepthFirstAdapter extends AnalysisAdapter
     public void caseALtExpressionLvl4(ALtExpressionLvl4 node)
     {
         inALtExpressionLvl4(node);
-        if(node.getExpressionLvl4() != null)
+        if(node.getFirst() != null)
         {
-            node.getExpressionLvl4().apply(this);
+            node.getFirst().apply(this);
         }
         if(node.getLessThan() != null)
         {
@@ -1000,9 +1000,9 @@ public class DepthFirstAdapter extends AnalysisAdapter
     public void caseAEqExpressionLvl4(AEqExpressionLvl4 node)
     {
         inAEqExpressionLvl4(node);
-        if(node.getExpressionLvl4() != null)
+        if(node.getFirst() != null)
         {
-            node.getExpressionLvl4().apply(this);
+            node.getFirst().apply(this);
         }
         if(node.getEquals() != null)
         {

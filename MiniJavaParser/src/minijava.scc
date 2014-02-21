@@ -132,9 +132,9 @@ Productions
   expression_lvl5 = {and}  expression_lvl5 T.and expression_lvl4
                   | {pass} expression_lvl4;
                   
-  expression_lvl4 = {qt}   expression_lvl4 T.greater_than expression_lvl3
-                  | {lt}   expression_lvl4 T.less_than expression_lvl3
-                  | {eq}   expression_lvl4 T.equals expression_lvl3
+  expression_lvl4 = {qt}   [first]:expression_lvl3 T.greater_than expression_lvl3
+                  | {lt}   [first]:expression_lvl3 T.less_than expression_lvl3
+                  | {eq}   [first]:expression_lvl3 T.equals expression_lvl3
                   | {pass} expression_lvl3;
   
   expression_lvl3 = {add}  expression_lvl3 T.plus expression_lvl2

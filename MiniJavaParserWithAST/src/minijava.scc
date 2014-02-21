@@ -113,7 +113,7 @@ Productions
   
   values_list_tail {-> expression } = T.comma expression {-> expression.expression };
   
-  statement {-> statement } = {if}         T.if T.left_paren expression T.right_paren [true]:statement_block T.else [false]:statement_block {-> New statement.if(expression.expression, [true.statement], [false.statement]) }
+  statement {-> statement } = {if} T.if T.left_paren expression T.right_paren [true]:statement_block T.else [false]:statement_block {-> New statement.if(expression.expression, [true.statement], [false.statement]) }
             | {while}      T.while T.left_paren expression T.right_paren statement_block {-> New statement.while(expression.expression, [statement_block.statement]) }
             | {return}     T.return expression T.semicolon {-> New statement.return(expression) }
             | {assignment} T.identifier T.equals expression T.semicolon {-> New statement.assignment(identifier, expression) }
@@ -132,9 +132,9 @@ Productions
   expression_lvl5 {-> expression } = {and}  expression_lvl5 T.and expression_lvl4 {-> New expression.and(expression_lvl5.expression, expression_lvl4.expression) }
                   | {pass} expression_lvl4 {-> expression_lvl4.expression };
                   
-  expression_lvl4 {-> expression } = {qt}   [first]:expression_lvl3 T.greater_than expression_lvl3 {-> New expression.greater_than(first.expression, expression_lvl3.expression) }
-                  | {lt}   [first]:expression_lvl3 T.less_than expression_lvl3 {-> New expression.less_than(first.expression, expression_lvl3.expression) }
-                  | {eq}   [first]:expression_lvl3 T.equals expression_lvl3 {-> New expression.equals(first.expression, expression_lvl3.expression) }
+  expression_lvl4 {-> expression } = {qt}   [first]:expression_lvl3 T.greater_than [second]:expression_lvl3 {-> New expression.greater_than(first.expression, second.expression) }
+                  | {lt}   [first]:expression_lvl3 T.less_than [second]:expression_lvl3 {-> New expression.less_than(first.expression, second.expression) }
+                  | {eq}   [first]:expression_lvl3 T.equals [second]:expression_lvl3 {-> New expression.equals(first.expression, second.expression) }
                   | {pass} expression_lvl3 {-> expression_lvl3.expression };
   
   expression_lvl3 {-> expression } = {add}  expression_lvl3 T.plus expression_lvl2 {-> New expression.addition(expression_lvl3.expression, expression_lvl2.expression) }
@@ -149,7 +149,7 @@ Productions
                   | {neg}  T.minus expression_lvl1 {-> expression_lvl1.expression }
                   | {pass} expression_lvl0 {-> expression_lvl0.expression };  
                   
-  expression_lvl0 {-> expression } = {array}      T.identifier T.left_bracket expression T.right_bracket {-> New expression.array(identifier, expression.expression) }
+  expression_lvl0 {-> expression } = {array} T.identifier T.left_bracket expression T.right_bracket {-> New expression.array(identifier, expression.expression) }
                   | {method_cal} method_call_expr? T.identifier T.left_paren values_list? T.right_paren {-> New expression.method_call(method_call_expr.expression, identifier, [values_list.expression]) }
                   | {int}        T.integer_literal {-> New expression.int(integer_literal) }
                   | {string}     T.string_literal {-> New expression.string(string_literal) }
@@ -158,8 +158,8 @@ Productions
                   | {identifier} T.identifier {-> New expression.identifier(identifier) }
                   | {this}       T.this {-> New expression.this(this) }
                   | {new_obj}    T.new T.identifier T.left_paren values_list? T.right_paren {-> New expression.new_object(identifier, [values_list.expression]) }
-                  | {new_int_arr}    T.new T.int T.left_bracket expression T.right_bracket {-> New expression.new_int_array(expression.expression) }
-                  | {new_str_arr}    T.new T.string_class T.left_bracket expression T.right_bracket {-> New expression.new_string_array(expression.expression) }
+                  | {new_int_arr} T.new T.int T.left_bracket expression T.right_bracket {-> New expression.new_int_array(expression.expression) }
+                  | {new_str_arr} T.new T.string_class T.left_bracket expression T.right_bracket {-> New expression.new_string_array(expression.expression) }
                   | {paren}      T.left_paren expression T.right_paren {-> expression.expression };
                   
    method_call_expr {-> expression } = expression_lvl0 T.dot {-> expression_lvl0.expression };
@@ -174,7 +174,7 @@ Productions
    
    variable = type identifier;
    
-   method = type identifier argument* variable* statement*;
+   method = type identifier argument* variable* statement+;
    
    type = {int_array} int 
         | {string_array} string_class
