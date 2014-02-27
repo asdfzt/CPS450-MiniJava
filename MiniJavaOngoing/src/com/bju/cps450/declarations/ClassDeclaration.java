@@ -60,4 +60,12 @@ public class ClassDeclaration extends DeclarationsWithVariables {
 		}
 		return null;
 	}
+	
+	public void setParent(ClassDeclaration decl) {
+		this.inheritsFrom = decl;
+	}
+	
+	public ClassDeclaration getParent() {
+		return this.inheritsFrom;
+	}
 }
