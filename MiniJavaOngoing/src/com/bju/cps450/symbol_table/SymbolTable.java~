@@ -11,7 +11,7 @@ import com.bju.cps450.declarations.MethodDeclaration;
 import com.bju.cps450.declarations.VariableDeclaration;
 
 public class SymbolTable {
-	public class Symbol {
+	private class Symbol {
 		private String name;
 		private Declaration decl;
 		
@@ -78,19 +78,12 @@ public class SymbolTable {
 		throw new Exception(name + " was not found on symbol table");
 	}
 	
-	public void beginScope() throws Exception {
-		if(symbolTable.size() == 2) {
-			throw new Exception("stack overflow");
-		}
+	public void beginScope() {
 		++scope;
 		symbolTable.push(new HashMap<String, Symbol>());
 	}
 	
-	public void endScope() throws Exception {
-		if(symbolTable.size() == 0) {
-			throw new Exception("stack underflow");
-		}
-		
+	public void endScope() {
 		--scope;
 		HashMap<String, Symbol> current = symbolTable.pop();
 		
