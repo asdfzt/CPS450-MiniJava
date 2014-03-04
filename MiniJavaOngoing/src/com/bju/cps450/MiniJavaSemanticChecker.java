@@ -13,6 +13,8 @@ import com.bju.cps450.declarations.VariableDeclaration;
 import com.bju.cps450.node.AAdditionExpression;
 import com.bju.cps450.node.AAndExpression;
 import com.bju.cps450.node.AArgument;
+import com.bju.cps450.node.AArrayAssignmentStatement;
+import com.bju.cps450.node.AAssignmentStatement;
 import com.bju.cps450.node.ABooleanType;
 import com.bju.cps450.node.AClassDefinition;
 import com.bju.cps450.node.ADivisionExpression;
@@ -20,6 +22,7 @@ import com.bju.cps450.node.AEqualsExpression;
 import com.bju.cps450.node.AFalseExpression;
 import com.bju.cps450.node.AGreaterThanExpression;
 import com.bju.cps450.node.AIdentifierExpression;
+import com.bju.cps450.node.AIfStatement;
 import com.bju.cps450.node.AIntArrayType;
 import com.bju.cps450.node.AIntExpression;
 import com.bju.cps450.node.AIntType;
@@ -38,6 +41,7 @@ import com.bju.cps450.node.AThisExpression;
 import com.bju.cps450.node.ATrueExpression;
 import com.bju.cps450.node.AVariable;
 import com.bju.cps450.node.AVoidType;
+import com.bju.cps450.node.AWhileStatement;
 import com.bju.cps450.node.Node;
 import com.bju.cps450.node.PArgument;
 import com.bju.cps450.node.PStatement;
@@ -289,7 +293,48 @@ public class MiniJavaSemanticChecker extends DepthFirstAdapter {
 	@Override
 	public void outAMultiplicationExpression(AMultiplicationExpression node) {
 		super.outAMultiplicationExpression(node);
+		initNode(node);
 		
+		Type t = Type.error;
+		Type lhs = (Type)attributeGrammarMap.get(node.getLhs()).get("type");
+		Type rhs = (Type)attributeGrammarMap.get(node.getRhs()).get("type");
+		if(lhs.compareTo(rhs) == 0 && (lhs.compareTo(Type.integer) == 0/* || other types here */)) {
+			t = Type.integer;
+		} else {
+			//print an error
+		}
+		
+		attributeGrammarMap.get(node).put("type", t);
+	}
+
+	@Override
+	public void outAIfStatement(AIfStatement node) {
+		super.outAIfStatement(node);
+		Type t = (Type)attributeGrammarMap.get(node).get("type");
+		//ensure this a boolean
+		if(t.compareTo(Type.bool) == 0) {
+			
+		} else {
+			//print error
+		}
+	}
+
+	@Override
+	public void outAWhileStatement(AWhileStatement node) {
+		// TODO Auto-generated method stub
+		super.outAWhileStatement(node);
+	}
+
+	@Override
+	public void outAAssignmentStatement(AAssignmentStatement node) {
+		// TODO Auto-generated method stub
+		super.outAAssignmentStatement(node);
+	}
+
+	@Override
+	public void outAArrayAssignmentStatement(AArrayAssignmentStatement node) {
+		// TODO Auto-generated method stub
+		super.outAArrayAssignmentStatement(node);
 	}
 
 	@Override
